@@ -75,7 +75,7 @@
         android:layout_width="0dp"
         android:layout_height="53dp"
         android:ems="10"
-        android:hint="UserType"
+        android:hint="UserType (User or Admin)"
         android:inputType="text"
         tools:ignore="HardcodedText,MissingConstraints,RtlHardcoded"
         tools:layout_constraintTop_creator="1"
