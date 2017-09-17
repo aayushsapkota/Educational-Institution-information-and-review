@@ -30,8 +30,8 @@ public class login_page extends AppCompatActivity {
         login_Register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent registerIntent = new Intent(login_page.this, registerActivity.class);
-                login_page.this.startActivity(registerIntent);
+                Intent loginIntent = new Intent(login_page.this, registerActivity.class);
+                login_page.this.startActivity(loginIntent);
             }
         });
 
@@ -52,8 +52,7 @@ public class login_page extends AppCompatActivity {
                                 String name = jsonResponse.getString("name");
                                 String organization = jsonResponse.getString("organization");
                                 String user_type = jsonResponse.getString("user_type");
-
-                                Intent intent = new Intent(login_page.this, mapActivity.class);
+                                Intent intent = new Intent(login_page.this, MapsActivity.class);
                                 intent.putExtra("name", name);
                                 intent.putExtra("organization", organization);
                                 intent.putExtra("user_type", user_type);
