@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.creativeminds.stealthpatrolling">
-=======
 <?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android"
 package="com.creativeminds.stealthpatrolling">
->>>>>>> c084edba00d82faae48816aa201a847754d7be04
 
    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
