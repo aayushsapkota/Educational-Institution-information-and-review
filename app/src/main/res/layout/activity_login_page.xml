@@ -49,11 +49,12 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@android:color/holo_blue_light"
-        android:textSize="24dp"
+        android:textSize="24sp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="116dp" />
+        android:layout_marginLeft="116dp"
+        tools:ignore="RtlHardcoded" />
 
     <EditText
         android:id="@+id/user_password"
@@ -67,7 +68,8 @@
         android:inputType="textPassword"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_username"
-        tools:layout_constraintTop_creator="1" />
+        tools:layout_constraintTop_creator="1"
+        tools:ignore="RtlHardcoded" />
 
     <Button
         android:id="@+id/register_button"
