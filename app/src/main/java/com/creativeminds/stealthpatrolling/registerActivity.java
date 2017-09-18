@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -47,6 +48,7 @@ public class registerActivity extends AppCompatActivity {
                             if (sucess) {
                                 Intent intent = new Intent(registerActivity.this, login_page.class);
                                 registerActivity.this.startActivity(intent);
+                                Toast.makeText(getApplicationContext(), "successfully registered", Toast.LENGTH_LONG).show();
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(registerActivity.this);
                                 builder.setMessage("Registration Failed").setNegativeButton("Retry", null).create().show();
@@ -62,6 +64,8 @@ public class registerActivity extends AppCompatActivity {
                 RegisterRequest registerRequest = new RegisterRequest(name, organization, username, password, user_type, responseListener);
                 RequestQueue req_queue = Volley.newRequestQueue(registerActivity.this);
                 req_queue.add(registerRequest);
+
+
 
             }
         });

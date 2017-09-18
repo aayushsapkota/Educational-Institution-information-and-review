@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -60,6 +61,7 @@ public class login_page extends AppCompatActivity {
 
 
                                 login_page.this.startActivity(intent);
+                                Toast.makeText(getApplicationContext(), "Login Sucessful", Toast.LENGTH_LONG).show();
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(login_page.this);
                                 builder.setMessage("Login Failed").setNegativeButton("Retry", null).create().show();
