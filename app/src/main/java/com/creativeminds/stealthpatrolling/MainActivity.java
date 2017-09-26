@@ -16,10 +16,10 @@ import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    //For List Map
     static ArrayList<String> places = new ArrayList<>();
     static ArrayList<LatLng> locations = new ArrayList<>();
-    static ArrayAdapter arrayAdapter;
+    static ArrayAdapter arrayAdapter;//till here
 
     Timer timer;
 

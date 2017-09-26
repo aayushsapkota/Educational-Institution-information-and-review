@@ -10,4 +10,10 @@ public class landing_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
     }
+
+
+
+
+
+
 }
