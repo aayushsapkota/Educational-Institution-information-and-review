@@ -16,12 +16,9 @@ import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
-    //For List Map
-    static ArrayList<String> places = new ArrayList<>();
-    static ArrayList<LatLng> locations = new ArrayList<>();
-    static ArrayAdapter arrayAdapter;//till here
 
-    Timer timer;
+
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,32 +35,6 @@ public class MainActivity extends AppCompatActivity {
         }, 3000);
 
 
-        //List views and maps connection
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        ListView listView = (ListView) findViewById(R.id.listView);
-
-        places.add("Add a new place...");
-        locations.add(new LatLng(0, 0));
-
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, places);
-
-        listView.setAdapter(arrayAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                intent.putExtra("placeNumber", i);
-
-                startActivity(intent);
-
-            }
-
-
-        });//list and map till here
     }
 }

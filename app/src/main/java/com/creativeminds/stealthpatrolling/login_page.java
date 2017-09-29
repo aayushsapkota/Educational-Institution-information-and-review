@@ -53,10 +53,10 @@ public class login_page extends AppCompatActivity {
                                 String name = jsonResponse.getString("name");
                                 String organization = jsonResponse.getString("organization");
                                 String user_type = jsonResponse.getString("user_type");
-                                Intent intent = new Intent(login_page.this, MapsActivity.class);
-                                intent.putExtra("name", name);
-                                intent.putExtra("organization", organization);
-                                intent.putExtra("user_type", user_type);
+                                Intent intent = new Intent(login_page.this, LocationList.class);
+//                                intent.putExtra("name", name);
+//                                intent.putExtra("organization", organization);
+//                                intent.putExtra("user_type", user_type);
                                 login_page.this.startActivity(intent);
 
 
@@ -70,6 +70,8 @@ public class login_page extends AppCompatActivity {
                         catch (JSONException e){
                             e.printStackTrace();
                         }
+
+
 
                     }
 
