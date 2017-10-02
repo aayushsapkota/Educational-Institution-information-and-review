@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Stealth Patrolling</string>
+    <string name="app_name">Random Patrolling</string>
     <string name="button">Button</string>
     <string name="Sign_in">Sign In</string>
     <string name="username">Username</string>

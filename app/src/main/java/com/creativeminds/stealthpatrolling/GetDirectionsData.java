@@ -45,21 +45,6 @@ public class GetDirectionsData extends AsyncTask<Object, String, String> {
         DataParser parser = new DataParser();
         directionsList = parser.parseDirections(result);
 
-//        Log.d("result", result);
-
-        //duration = directionsList.get("duration");
-        //distance = directionsList.get("distance");
-
-
-//        gMap.clear();
-////       System.out.println("the duration is "+duration +"and the distance is "+distance);
-//        Log.d("duration: ", duration + " distance: " + distance);
-//        MarkerOptions markerOptions = new MarkerOptions();
-//        markerOptions.position(latLng);
-//        markerOptions.title("Duration= " + duration);
-//        markerOptions.snippet("distance = " + duration);
-
-
     }
 
 
