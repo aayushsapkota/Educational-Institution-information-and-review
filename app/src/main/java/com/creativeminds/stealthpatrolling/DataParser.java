@@ -18,8 +18,8 @@ public class DataParser {
         String duration = "";
 
         try {
-            duration = googleDirectionsJson.getJSONObject(0).getJSONObject("duration").getString("text");
-            distance = googleDirectionsJson.getJSONObject(0).getJSONObject("distance").getString("text");
+          duration = googleDirectionsJson.getJSONObject(0).getJSONObject("duration").getString("text");
+          distance = googleDirectionsJson.getJSONObject(0).getJSONObject("distance").getString("text");
 
             googleDirectionMap.put("duration", duration);
             googleDirectionMap.put("distance", distance);
