@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -71,10 +72,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                centerMapLocation(location, "Your location");
+                if (ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    centerMapLocation(location, "Your location");
+                } else {
+                    ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                }
             }
 
             @Override
@@ -89,20 +95,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onProviderDisabled(String s) {
             }
         };
+
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null) {
 
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mMap.setMyLocationEnabled(true);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 300, 500, locationListener);
-                lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                centerMapLocation(lastLocation, "Your location");
+                Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (lastLocation == null) {
+                    lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+                    if (lastLocation != null) {
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 300, 500, locationListener);
+                        centerMapLocation(lastLocation, "Your location");
+                        mMap.setMyLocationEnabled(true);
+                    } else {
+                        AlertDialog alertDialog = new AlertDialog.Builder(mapSelect.this).create();
+                        alertDialog.setTitle("Location Disabled");
+                        alertDialog.setMessage("Please, turn your location on. This app needs location to run");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+
+                } else {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 300, 500, locationListener);
+                    centerMapLocation(lastLocation, "Your location");
+                    mMap.setMyLocationEnabled(true);
+                }
 
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
-
 
         Button places = (Button) findViewById(R.id.places);
         Button alarms = (Button) findViewById(R.id.alarms);
@@ -141,7 +169,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         onInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-               windowClick(marker);
+                windowClick(marker);
             }
         };
 
@@ -152,13 +180,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void centerMapLocation(Location location, String title) {
         LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        try {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
-
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Location getUserLocation(){
-        return  lastLocation;
+    public Location getUserLocation() {
+        return lastLocation;
     }
 
 

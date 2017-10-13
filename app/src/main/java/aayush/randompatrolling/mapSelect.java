@@ -2,6 +2,7 @@ package aayush.randompatrolling;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -13,7 +14,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -77,14 +80,37 @@ public class mapSelect extends FragmentActivity implements OnMapReadyCallback, G
             public void onProviderDisabled(String s) {
             }
         };
+
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null) {
 
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mMap.setMyLocationEnabled(true);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-                Location lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-               centerMapLocation(lastLocation, "Your location");
+                Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (lastLocation == null) {
+                    lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+                    if (lastLocation != null) {
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 300, 500, locationListener);
+                        centerMapLocation(lastLocation, "Your location");
+                        mMap.setMyLocationEnabled(true);
+                    }else{
+                        AlertDialog alertDialog = new AlertDialog.Builder(mapSelect.this).create();
+                        alertDialog.setTitle("Location Disabled");
+                        alertDialog.setMessage("Please, turn your location on. This app needs location to run");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+
+                } else {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 300, 500, locationListener);
+                    centerMapLocation(lastLocation, "Your location");
+                    mMap.setMyLocationEnabled(true);
+                }
 
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
