@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="aayush.randompatrolling.addAlarm">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="443dp"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginEnd="11dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="5dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="5dp"
+            android:text="@string/title"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/titlebox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/Message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="5dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="5dp"
+            android:text="@string/message"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/messageBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textMultiLine" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/addAlarmButton"
+        android:layout_width="186dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="4dp"
+        android:background="#333"
+        android:text="@string/addAlarm"
+        android:textColor="#fff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginStart="4dp" />
+
+    <Button
+        android:id="@+id/alarmBack"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="#333"
+        android:text="@string/back"
+        android:textColor="#fff"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginStart="2dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/addAlarmButton"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toRightOf="@+id/addAlarmButton"
+        app:layout_constraintHorizontal_bias="0.0" />
+
+</android.support.constraint.ConstraintLayout>

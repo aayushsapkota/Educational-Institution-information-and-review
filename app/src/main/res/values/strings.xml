@@ -14,6 +14,10 @@
     <string name="addPlace">Add Place</string>
     <string name="addAlarm">Add Alarm</string>
     <string name="title_activity_map_select">Map</string>
+
+    <string name="add_Alarm">Add Alarm</string>
+    <string name="message">Message</string>
+    <string name="title">Title</string>
     <string name="address">Address</string>
     <string name="gotoselectMap">select from map</string>
     <string name="minTime">Minimum Time to Stay</string>

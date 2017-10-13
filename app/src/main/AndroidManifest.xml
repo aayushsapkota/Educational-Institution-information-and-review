@@ -38,6 +38,7 @@
             android:label="@string/title_activity_map_select" />
         <activity android:name=".addPlace" />
         <activity android:name=".Display_location_info"></activity>
+        <activity android:name=".addAlarm"></activity>
     </application>
 
 </manifest>

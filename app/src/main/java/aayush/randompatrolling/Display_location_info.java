@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v4.view.ScrollingView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -22,6 +24,8 @@ public class Display_location_info extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_location_info);
 
+        Button back = (Button) findViewById(R.id.back);
+
         Intent i = getIntent();
         address = i.getStringExtra("address");
         latitude = i.getStringExtra("Latitude");
@@ -37,5 +41,12 @@ public class Display_location_info extends AppCompatActivity {
 
         TextView view = (TextView) findViewById(R.id.viewData);
         view.setText(result);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), MapsActivity.class);
+                startActivity(i);
+            }
+        });
     }
 }
