@@ -11,7 +11,10 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.SettingInjectorService;
+import android.media.audiofx.Virtualizer;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -113,16 +116,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     } else {
                         AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
                         alertDialog.setTitle("Location Disabled");
-                        alertDialog.setMessage("Please, turn your location on. This app needs location to run");
+                        alertDialog.setMessage("Allow this app to use location");
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
+                                        Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                        startActivity(i);
                                         dialog.dismiss();
                                     }
                                 });
                         alertDialog.show();
                     }
-
                 } else {
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 300, 500, locationListener);
                     centerMapLocation(lastLocation, "Your location");
@@ -130,7 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
 

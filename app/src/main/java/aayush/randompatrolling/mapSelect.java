@@ -10,6 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -60,12 +61,14 @@ public class mapSelect extends FragmentActivity implements OnMapReadyCallback, G
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
+
         mMap.setOnMapLongClickListener((GoogleMap.OnMapLongClickListener) this);
 
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-               centerMapLocation(location, "Your location");
+                centerMapLocation(location, "Your location");
             }
 
             @Override
@@ -93,13 +96,25 @@ public class mapSelect extends FragmentActivity implements OnMapReadyCallback, G
                         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 300, 500, locationListener);
                         centerMapLocation(lastLocation, "Your location");
                         mMap.setMyLocationEnabled(true);
-                    }else{
+                        AlertDialog alertDialog = new AlertDialog.Builder(mapSelect.this).create();
+                        alertDialog.setMessage("Long tap on the desired location");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+
+                    } else {
                         AlertDialog alertDialog = new AlertDialog.Builder(mapSelect.this).create();
                         alertDialog.setTitle("Location Disabled");
                         alertDialog.setMessage("Please, turn your location on. This app needs location to run");
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
+                                        Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                        startActivity(i);
                                         dialog.dismiss();
                                     }
                                 });
@@ -138,7 +153,7 @@ public class mapSelect extends FragmentActivity implements OnMapReadyCallback, G
                     address = String.valueOf(latLng.latitude) + " " + String.valueOf(latLng.longitude);
                 }
                 Intent i = new Intent(getApplicationContext(), addPlace.class);
-                i.putExtra("addressName",address);
+                i.putExtra("addressName", address);
                 i.putExtra("latitude", latLng.latitude);
                 i.putExtra("longitude", latLng.longitude);
                 startActivity(i);
