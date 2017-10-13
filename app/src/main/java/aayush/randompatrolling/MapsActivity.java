@@ -2,6 +2,7 @@ package aayush.randompatrolling;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -15,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -109,7 +111,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         centerMapLocation(lastLocation, "Your location");
                         mMap.setMyLocationEnabled(true);
                     } else {
-                        AlertDialog alertDialog = new AlertDialog.Builder(mapSelect.this).create();
+                        AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
                         alertDialog.setTitle("Location Disabled");
                         alertDialog.setMessage("Please, turn your location on. This app needs location to run");
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
