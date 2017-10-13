@@ -14,7 +14,7 @@
     <string name="addPlace">Add Place</string>
     <string name="addAlarm">Add Alarm</string>
     <string name="title_activity_map_select">Map</string>
-
+    <string name="map">Main Map</string>
     <string name="add_Alarm">Add Alarm</string>
     <string name="message">Message</string>
     <string name="title">Title</string>
@@ -25,4 +25,6 @@
     <string name="priority">Priority</string>
     <string name="checkbackon">check this place on every(X) hours</string>
     <string name="xhours">please put time to check back on</string>
+    <string name="addThisPlace">Add this Place</string>
+    <string name="addThisAlarm">Add this Alarm</string>
 </resources>

@@ -56,6 +56,7 @@ public class addPlace extends AppCompatActivity {
         final EditText priority = (EditText) findViewById(R.id.placePriority);
         final EditText checkBackTime = (EditText) findViewById(R.id.checkBackDuration);
         final Button addPlace = (Button) findViewById(R.id.addPlaceButton);
+        Button back = (Button) findViewById(R.id.placesBack);
 
         Intent getPlaces = getIntent();
         if (getPlaces.getStringExtra("addressName") != null) {
@@ -94,11 +95,18 @@ public class addPlace extends AppCompatActivity {
         address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent i = new Intent(getApplicationContext(), mapSelect.class);
                 startActivity(i);
             }
 
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), places.class);
+                startActivity(i);
+            }
         });
     }
 

@@ -113,17 +113,18 @@
             android:inputType="textPersonName" />
 
     </LinearLayout>
+
     <Button
         android:id="@+id/addPlaceButton"
         android:layout_width="186dp"
         android:layout_height="55dp"
         android:background="#333"
-        android:text="@string/addPlace"
+        android:text="@string/addThisPlace"
         android:textColor="#fff"
-        tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <Button
         android:id="@+id/placesBack"

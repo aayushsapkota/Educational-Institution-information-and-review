@@ -27,53 +27,62 @@ public class addAlarm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
 
-            final EditText titlebox = (EditText) findViewById(R.id.titlebox);
-            final EditText messagebox = (EditText) findViewById(R.id.messageBox);
-            final Button addAlarm = (Button) findViewById(R.id.addAlarmButton);
-            final Button back = (Button) findViewById(R.id.alarmBack);
+        final EditText titlebox = (EditText) findViewById(R.id.titlebox);
+        final EditText messagebox = (EditText) findViewById(R.id.messageBox);
+        final Button addAlarm = (Button) findViewById(R.id.addAlarmButton);
+        final Button back = (Button) findViewById(R.id.alarmBack);
 
-            addAlarm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (hasNetworkConnection()) {
-                        final String title = titlebox.getText().toString();
-                        final String message = messagebox.getText().toString();
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(addAlarm.this, alarms.class);
+                startActivity(intent);
+            }
+        });
+
+        addAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (hasNetworkConnection()) {
+                    final String title = titlebox.getText().toString();
+                    final String message = messagebox.getText().toString();
 
 
-                        final Response.Listener<String> responseListener = new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonResponse = new JSONObject(response);
-                                    boolean sucess = jsonResponse.getBoolean("sucess");
-                                    if (sucess) {
-                                        Intent intent = new Intent(aayush.randompatrolling.addAlarm.this, alarms.class);
-                                        aayush.randompatrolling.addAlarm.this.startActivity(intent);
-                                        Toast.makeText(getApplicationContext(), "successfully Sent!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(aayush.randompatrolling.addAlarm.this);
-                                        builder.setMessage("Sending Failed").setNegativeButton("Retry", null).create().show();
-                                    }
-
-                                } catch (JSONException ex) {
-                                    ex.printStackTrace();
+                    final Response.Listener<String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(response);
+                                boolean sucess = jsonResponse.getBoolean("sucess");
+                                if (sucess) {
+                                    Intent intent = new Intent(aayush.randompatrolling.addAlarm.this, alarms.class);
+                                    aayush.randompatrolling.addAlarm.this.startActivity(intent);
+                                    Toast.makeText(getApplicationContext(), "successfully Sent!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(aayush.randompatrolling.addAlarm.this);
+                                    builder.setMessage("Sending Failed").setNegativeButton("Retry", null).create().show();
                                 }
+
+                            } catch (JSONException ex) {
+                                ex.printStackTrace();
                             }
+                        }
 
 
-                        };
-                        alarmRequest AlarmRequest = new alarmRequest(title, message,responseListener);
-                        RequestQueue req_queue = Volley.newRequestQueue(aayush.randompatrolling.addAlarm.this);
-                        req_queue.add(AlarmRequest);
+                    };
+                    alarmRequest AlarmRequest = new alarmRequest(title, message, responseListener);
+                    RequestQueue req_queue = Volley.newRequestQueue(aayush.randompatrolling.addAlarm.this);
+                    req_queue.add(AlarmRequest);
 
 
-                    }
-                    else {
-                        Toast.makeText(aayush.randompatrolling.addAlarm.this, "No internet Connection", Toast.LENGTH_SHORT).show();
-                    }
+                } else {
+                    Toast.makeText(aayush.randompatrolling.addAlarm.this, "No internet Connection", Toast.LENGTH_SHORT).show();
                 }
-            });
-        }
+            }
+        });
+
+
+    }
 
     public boolean hasNetworkConnection() {
         boolean connected = false;
@@ -87,4 +96,4 @@ public class addAlarm extends AppCompatActivity {
         }
         return connected;
     }
-    }
+}

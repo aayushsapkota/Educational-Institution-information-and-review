@@ -24,16 +24,16 @@
         android:id="@+id/placesBack"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:background="#333"
-        android:text="@string/back"
-        android:textColor="#fff"
-        tools:layout_constraintRight_creator="1"
         android:layout_marginStart="2dp"
-        app:layout_constraintRight_toRightOf="parent"
+        android:background="#333"
+        android:text="@string/map"
+        android:textColor="#fff"
         app:layout_constraintBaseline_toBaselineOf="@+id/addPlaceButton"
+        app:layout_constraintLeft_toRightOf="@+id/addPlaceButton"
+        app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintBaseline_creator="1"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toRightOf="@+id/addPlaceButton" />
+        tools:layout_constraintRight_creator="1" />
 
     <TextView
         android:id="@+id/result"

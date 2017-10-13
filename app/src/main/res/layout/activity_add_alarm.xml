@@ -17,7 +17,8 @@
         android:layout_marginStart="11dp"
         android:layout_marginEnd="11dp"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/linearLayout">
 
         <TextView
             android:id="@+id/Title"
@@ -60,17 +61,18 @@
     <Button
         android:id="@+id/addAlarmButton"
         android:layout_width="186dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="4dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginStart="3dp"
         android:background="#333"
-        android:text="@string/addAlarm"
+        android:text="@string/addThisAlarm"
         android:textColor="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginStart="4dp" />
+        tools:layout_constraintTop_creator="1" />
 
     <Button
         android:id="@+id/alarmBack"
