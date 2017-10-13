@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="aayush.randompatrolling.addPlace">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="443dp"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginEnd="11dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/AddressName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="5dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="5dp"
+            android:text="@string/address"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/gotoselectMap"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/minTimeToStay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="5dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="5dp"
+            android:text="@string/minTime"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/minTimeStay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/maxTimeToStay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="5dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="5dp"
+            android:text="@string/maxTime"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/maxTimeStay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/priorityOfPlace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="5dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="5dp"
+            android:text="@string/priority"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/placePriority"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/priority"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/durationToCheckBackOn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="5dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="5dp"
+            android:text="@string/checkbackon"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/checkBackDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/xhours"
+            android:inputType="textPersonName" />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/addPlaceButton"
+        android:layout_width="186dp"
+        android:layout_height="55dp"
+        android:background="#333"
+        android:text="@string/addPlace"
+        android:textColor="#fff"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+        android:id="@+id/placesBack"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="#333"
+        android:text="@string/back"
+        android:textColor="#fff"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginStart="2dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/addPlaceButton"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toRightOf="@+id/addPlaceButton" />
+
+</android.support.constraint.ConstraintLayout>

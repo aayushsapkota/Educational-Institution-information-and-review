@@ -1,15 +1,24 @@
 <resources>
     <string name="app_name">Random Patrolling</string>
-    <string name="button">Button</string>
-    <string name="Sign_in">Sign In</string>
-    <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="username">Username</string>
     <string name="register">Register</string>
-    <string name="user_type">User Type</string>
-    <string name="name">Name</string>
+    <string name="Sign_in">Sign in</string>
     <string name="organization">Organization</string>
-    <string name="welcome_message">Thank you for signing up. And welcome to Stealth Patrolling</string>
+    <string name="alarms">Alarms</string>
+    <string name="places">Places</string>
+    <string name="name">Name</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_maps_activitylocations">Map</string>
-    <string name="title_activity_main_map">Map</string>
+    <string name="button">Alarms</string>
+    <string name="back">back</string>
+    <string name="addPlace">Add Place</string>
+    <string name="addAlarm">Add Alarm</string>
+    <string name="title_activity_map_select">Map</string>
+    <string name="address">Address</string>
+    <string name="gotoselectMap">select from map</string>
+    <string name="minTime">Minimum Time to Stay</string>
+    <string name="maxTime">Maximum Time to Stay</string>
+    <string name="priority">Priority</string>
+    <string name="checkbackon">check this place on every(X) hours</string>
+    <string name="xhours">please put time to check back on</string>
 </resources>

@@ -4,10 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.creativeminds.stealthpatrolling.registerActivity"
-    tools:layout_editor_absoluteY="81dp"
-    tools:layout_editor_absoluteX="0dp">
-
+    tools:context="aayush.randompatrolling.register">
 
     <EditText
         android:id="@+id/register_username"
@@ -59,7 +56,7 @@
         android:layout_height="59dp"
         android:layout_marginTop="12dp"
         android:ems="10"
-        android:hint="Name"
+        android:hint="@string/name"
         android:inputType="textPersonName"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/register_password"
