@@ -29,9 +29,11 @@ public class DataFromGoogleRequest extends AsyncTask<Object, String, String> {
     String googleUrl;
     private static ArrayList durationList = new ArrayList();
 
-    public DataFromGoogleRequest(){
+    public DataFromGoogleRequest() {
         durationList.clear();
     }
+
+    static int size = 0;
 
     @Override
     protected String doInBackground(Object[] params) {
@@ -111,6 +113,12 @@ public class DataFromGoogleRequest extends AsyncTask<Object, String, String> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        size++;
+        Log.d("Size:", String.valueOf(size));
+    }
+
+    public int getSize() {
+        return size;
     }
 
     public ArrayList getDurationList() {
