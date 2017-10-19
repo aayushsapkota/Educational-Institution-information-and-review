@@ -11,8 +11,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.SettingInjectorService;
-import android.media.audiofx.Virtualizer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -22,9 +22,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,31 +38,34 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
-import static android.location.LocationManager.NETWORK_PROVIDER;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public static LocationListener locationListener;
     private GoogleMap mMap;
     GoogleMap.OnInfoWindowClickListener onInfoWindowClickListener;
-    private LocationManager locationManager;
-    placeManager placeObj = new placeManager();
-    ArrayList<SelectedLocation> LocationList;
-    LatLng newLocationAdded;
-    private double latitude;
-    private double longitude;
+    private Login login = new Login();
+    String user_id;
+
+    private placeManager placeObj = new placeManager();
+    private static ArrayList<SelectedLocation> LocationList;
+    private SelectedLocation selectedLocation;
+    private LatLng newLocationAdded;
+    private String latitude;
+    private String longitude;
     private String address;
     private String minStay;
     private String maxStay;
     private String priority;
     private String checkBackOn;
-    private String result;
-    Location lastLocation;
+    //    private String result;
+    private static Location lastLocation;
 
 
     @Override
@@ -101,16 +108,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
 
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null) {
 
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (lastLocation == null) {
                     lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
                     if (lastLocation != null) {
-                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 300, 500, locationListener);
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 20, locationListener);
                         centerMapLocation(lastLocation, "Your location");
                         mMap.setMyLocationEnabled(true);
                     } else {
@@ -135,8 +142,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             } else {
                 ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(i);
             }
         }
+
 
         Button places = (Button) findViewById(R.id.places);
         Button alarms = (Button) findViewById(R.id.alarms);
@@ -157,20 +167,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        LocationList = placeObj.getdestinationList();
-
-        for (SelectedLocation s : LocationList) {
-            address = s.getName();
-            latitude = Double.parseDouble(s.getLatitude());
-            longitude = Double.parseDouble(s.getLongitude());
-            newLocationAdded = new LatLng(latitude, longitude);
-
-            minStay = s.getMinTimeToStay();
-            maxStay = s.getMaxTimeTOStay();
-            priority = s.getPriority();
-            checkBackOn = s.getCheckBackOn();
-            mMap.addMarker(new MarkerOptions().position(newLocationAdded).title(address));
-        }
 
         onInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -178,6 +174,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 windowClick(marker);
             }
         };
+
+        if (hasNetworkConnection()) {
+
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        LocationList = new ArrayList<>();
+                        boolean sucess = jsonResponse.getBoolean("sucess");
+                        if (sucess) {
+                            for (int i = 0; i < jsonResponse.length() - 1; i++) {
+                                String j = String.valueOf(i);
+                                JSONObject object = (JSONObject) jsonResponse.get(j);
+                                address = (String) object.get("name");
+                                latitude = (String) object.get("latitude");
+                                longitude = (String) object.get("longitude");
+                                minStay = (String) object.get("minStay");
+                                maxStay = (String) object.get("maxStay");
+                                priority = (String) object.get("priorityIndex");
+                                checkBackOn = (String) object.get("placeCheckBackTime");
+                                selectedLocation = new SelectedLocation();
+                                selectedLocation.addPlaceInformation(address, latitude, longitude,
+                                        minStay, maxStay, priority, checkBackOn);
+                                LocationList.add(selectedLocation);
+                            }
+
+                            for (SelectedLocation s : LocationList) {
+                                address = s.getName();
+                                Double Dlatitude = Double.parseDouble(s.getLatitude());
+                                Double Dlongitude = Double.parseDouble(s.getLongitude());
+                                newLocationAdded = new LatLng(Dlatitude, Dlongitude);
+                                Log.d("newloc", newLocationAdded.toString());
+                                Log.d("addressn", address);
+
+//                                minStay = s.getMinTimeToStay();
+//                                maxStay = s.getMaxTimeTOStay();
+//                                priority = s.getPriority();
+//                                checkBackOn = s.getCheckBackOn();
+                                if (mMap != null) {
+                                    mMap.addMarker(new MarkerOptions().position(newLocationAdded).title(address));
+//                                    Toast.makeText(getApplicationContext(), "Markers addeed Sucessfully", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No previous locations found", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            user_id = login.getUserID();
+            getLocationRequest getLocationRequest = new getLocationRequest(user_id, responseListener);
+            RequestQueue req_queue = Volley.newRequestQueue(MapsActivity.this);
+            req_queue.add(getLocationRequest);
+
+        } else {
+            Toast.makeText(getApplicationContext(), "No internet Connection", Toast.LENGTH_SHORT).show();
+        }
 
         mMap.setOnInfoWindowClickListener(onInfoWindowClickListener);
 
@@ -188,7 +246,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
         try {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
-
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -196,6 +253,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public Location getUserLocation() {
         return lastLocation;
+    }
+
+    public ArrayList<SelectedLocation> getLocationList() {
+        return LocationList;
     }
 
 
@@ -216,6 +277,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
+    public boolean hasNetworkConnection() {
+        boolean connected = false;
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netActive = connectivityManager.getActiveNetworkInfo();
+            connected = netActive != null && netActive.isAvailable() && netActive.isConnected();
+            return connected;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return connected;
+    }
+
+
 }
 
 

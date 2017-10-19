@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Login extends AppCompatActivity {
+    private static String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +56,18 @@ public class Login extends AppCompatActivity {
                         public void onResponse(String response) {
                             try {
                                 JSONObject jsonResponse = new JSONObject(response);
+                                Log.d("rsp",response);
                                 boolean sucess = jsonResponse.getBoolean("sucess");
                                 if (sucess) {
                                     String name = jsonResponse.getString("name");
-                                    String organization = jsonResponse.getString("organization");
-                                    String user_type = jsonResponse.getString("user_type");
+                                    user_id = jsonResponse.getString("user_id");
+//                                    Log.d("user ID", userID);
+//                                    String organization = jsonResponse.getString("organization");
+//                                    String user_type = jsonResponse.getString("user_type");
                                     Intent intent = new Intent(Login.this, MapsActivity.class);
+
                                     Login.this.startActivity(intent);
+
 
                                     Toast.makeText(getApplicationContext(), "Login Sucessful", Toast.LENGTH_SHORT).show();
                                 } else {
@@ -99,4 +105,11 @@ public class Login extends AppCompatActivity {
         }
         return connected;
     }
+
+
+
+    public String getUserID(){
+        return user_id;
+    }
+
 }

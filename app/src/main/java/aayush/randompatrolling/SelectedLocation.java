@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class SelectedLocation {
 
-    private ArrayList<String> place = new ArrayList<>();
+    //    private ArrayList<String> place = new ArrayList<>();
     private LocationManager locationManager;
     private String name;
     private String longitude;
@@ -26,10 +26,11 @@ public class SelectedLocation {
     private String maxTimeTOStay;
     private String priority;
     private String checkBackOn;
+    private String visited;
 
     double distance;
 
-    public void addPlaceInformation(String name, String longitude, String latitude,
+    public void addPlaceInformation(String name, String latitude, String longitude,
                                     String minTimeToStay, String maxTimeTOStay, String priority, String checkBackOn) {
         this.name = name;
         this.latitude = latitude;
@@ -40,17 +41,25 @@ public class SelectedLocation {
         this.checkBackOn = checkBackOn;
 
 
-        place.add(name);
-        place.add(longitude);
-        place.add(latitude);
-        place.add(minTimeToStay);
-        place.add(maxTimeTOStay);
-        place.add(priority);
-        place.add(checkBackOn);
+//        place.add(name);
+//        place.add(longitude);
+//        place.add(latitude);
+//        place.add(minTimeToStay);
+//        place.add(maxTimeTOStay);
+//        place.add(priority);
+//        place.add(checkBackOn);
     }
 
-    public ArrayList<String> getPlace() {
-        return place;
+    public void setVisited(String visited) {
+        this.visited = visited;
+    }
+
+//    public ArrayList<String> getPlace() {
+//        return place;
+//    }
+
+    public String getVisited() {
+        return visited;
     }
 
 
@@ -82,21 +91,21 @@ public class SelectedLocation {
         return this.checkBackOn;
     }
 
-    public double distanceTo(SelectedLocation location) {
-        try {
-            double tempLatitude = Double.parseDouble(location.latitude);
-            double tempLongitude = Double.parseDouble(location.longitude);
-            double xLatitude = Math.abs(Double.parseDouble(longitude) - tempLatitude);
-            double yLongitude = Math.abs(Double.parseDouble(latitude) - tempLongitude);
-            //pathagoras theorem
-            distance = Math.sqrt((xLatitude * xLatitude) + (yLongitude * yLongitude));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-
-
-        return distance;
-    }
+//    public double distanceTo(SelectedLocation location) {
+//        try {
+//            double tempLatitude = Double.parseDouble(location.latitude);
+//            double tempLongitude = Double.parseDouble(location.longitude);
+//            double xLatitude = Math.abs(Double.parseDouble(longitude) - tempLatitude);
+//            double yLongitude = Math.abs(Double.parseDouble(latitude) - tempLongitude);
+//            //pathagoras theorem
+//            distance = Math.sqrt((xLatitude * xLatitude) + (yLongitude * yLongitude));
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//        return distance;
+//    }
 
 
 }

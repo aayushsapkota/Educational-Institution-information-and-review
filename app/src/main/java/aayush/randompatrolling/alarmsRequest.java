@@ -6,9 +6,6 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Luffy on 13-Oct-17.
- */
 
 public class alarmsRequest extends StringRequest{
 
