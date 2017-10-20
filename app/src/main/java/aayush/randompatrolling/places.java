@@ -1,38 +1,25 @@
 package aayush.randompatrolling;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Network;
-import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.LocaleList;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.StaticLayout;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
-import java.util.concurrent.ExecutionException;
 
 
 public class places extends AppCompatActivity {
 
-//    tspCalculator tsp = new tspCalculator();
 
     MapsActivity mapsActivity = new MapsActivity();
     //All places arraylist
@@ -43,16 +30,18 @@ public class places extends AppCompatActivity {
     //like taking place out of when visited
     ArrayList<SelectedLocation> tspDurationList;
     int[][] durationMatrix;
-    private Stack<Integer> stack;
-    private int numberOfNodes;
+    static ArrayList<Integer> index1 = new ArrayList<>();
+
 
     String oLatitude;
     String oLongitude;
     String dLatitude;
     String dLongitude;
     DataFromGoogleRequest dataFromGoogleRequest;
-    private int time;
 
+    public places() {
+        index1.clear();
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -64,13 +53,7 @@ public class places extends AppCompatActivity {
         Button addPlace = (Button) findViewById(R.id.addPlaceButton);
         Button back = (Button) findViewById(R.id.placesBack);
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), MapsActivity.class);
-                startActivity(i);
-            }
-        });
+
 
         addPlace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +80,7 @@ public class places extends AppCompatActivity {
         }
         getAllDirectionDataFromGoogle();
         int timeFactor = placesList.size();
+        int time;
         if (timeFactor < 7) {
             time = timeFactor * 3500;
         } else {
@@ -135,9 +119,9 @@ public class places extends AppCompatActivity {
 
                             places instance = new places();
                             String result = "";
-                            ArrayList<Integer> index = instance.tsp(durationMatrix);
-                            for (int i = 0; i < index.size(); i++) {
-                                int j = index.get(i);
+                            index1 = instance.tsp(durationMatrix);
+                            for (int i = 0; i < index1.size(); i++) {
+                                int j = index1.get(i);
                                 result += placesList.get(j).getName() + " \n\n ";
                             }
                             resultView.setText("Places sorted by nearest distance \n\n" + result);
@@ -156,7 +140,18 @@ public class places extends AppCompatActivity {
         }, time);
 
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), MapsActivity.class);
+                i.putIntegerArrayListExtra("tsplist",index1);
+                startActivity(i);
+
+            }
+        });
     }
+
+
 
     public void getAllDirectionDataFromGoogle() {
 
@@ -195,8 +190,8 @@ public class places extends AppCompatActivity {
 
     public ArrayList tsp(int adjacencyMatrix[][]) {
         ArrayList<Integer> index = new ArrayList<>();
-        stack = new Stack<Integer>();
-        numberOfNodes = adjacencyMatrix[1].length - 1;
+        Stack<Integer> stack = new Stack<Integer>();
+        int numberOfNodes = adjacencyMatrix[1].length - 1;
         Log.d("numberOfNodes", String.valueOf(numberOfNodes));
         int[] visited = new int[numberOfNodes + 1];
         visited[numberOfNodes] = 1;

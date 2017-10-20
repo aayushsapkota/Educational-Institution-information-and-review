@@ -18,9 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * Created by Aayush Sapkota on 18/10/2017.
- */
+
 
 public class DataFromGoogleRequest extends AsyncTask<Object, String, String> {
 
@@ -33,7 +31,7 @@ public class DataFromGoogleRequest extends AsyncTask<Object, String, String> {
         durationList.clear();
     }
 
-    static int size = 0;
+//    static int size = 0;
 
     @Override
     protected String doInBackground(Object[] params) {
@@ -113,13 +111,10 @@ public class DataFromGoogleRequest extends AsyncTask<Object, String, String> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        size++;
-        Log.d("Size:", String.valueOf(size));
+//        size++;
+//        Log.d("Size:", String.valueOf(size));
     }
 
-    public int getSize() {
-        return size;
-    }
 
     public ArrayList getDurationList() {
         return durationList;

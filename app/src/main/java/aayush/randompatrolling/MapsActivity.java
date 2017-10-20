@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -37,6 +38,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -238,6 +241,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         mMap.setOnInfoWindowClickListener(onInfoWindowClickListener);
+
+        Intent intent = getIntent();
+        intent.getIntegerArrayListExtra("tsplist");
+        if (intent.getIntegerArrayListExtra("tsplist") != null) {
+            ArrayList<Integer> indexes = intent.getIntegerArrayListExtra("tsplist");
+            Log.d("Arraylist", indexes.toString());
+            for (int i = 0; i < indexes.size() - 1; i++) {
+                int iChoose = indexes.get(i);
+                int jChoose = indexes.get(i + 1);
+                Double oLat = Double.valueOf(LocationList.get(iChoose).getLatitude());
+                Double oLng = Double.valueOf(LocationList.get(iChoose).getLongitude());
+                Double dLat = Double.valueOf(LocationList.get(jChoose).getLatitude());
+                Double dLng = Double.valueOf(LocationList.get(jChoose).getLongitude());
+                LatLng origin = new LatLng(oLat, oLng);
+                LatLng destination = new LatLng(dLat, dLng);
+                Polyline line = mMap.addPolyline(new PolylineOptions().add(origin, destination).width(10).color(Color.RED));
+            }
+        }
 
 
     }
