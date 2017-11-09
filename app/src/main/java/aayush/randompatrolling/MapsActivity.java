@@ -46,6 +46,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -69,6 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String checkBackOn;
     //    private String result;
     private static Location lastLocation;
+    private static ArrayList<Integer> indexes;
 
 
     @Override
@@ -110,51 +112,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onProviderDisabled(String s) {
             }
         };
+        mapCenteringOnUserLocation();
 
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null) {
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (lastLocation == null) {
-                    lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-                    if (lastLocation != null) {
-                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 20, locationListener);
-                        centerMapLocation(lastLocation, "Your location");
-                        mMap.setMyLocationEnabled(true);
-                    } else {
-                        AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
-                        alertDialog.setTitle("Location Disabled");
-                        alertDialog.setMessage("Allow this app to use location");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                        startActivity(i);
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.show();
-                    }
-                } else {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 300, 500, locationListener);
-                    centerMapLocation(lastLocation, "Your location");
-                    mMap.setMyLocationEnabled(true);
-                }
-
-            } else {
-                ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(i);
-            }
-        }
+        requestLocations();
 
 
         Button places = (Button) findViewById(R.id.places);
         Button alarms = (Button) findViewById(R.id.alarms);
 
-        places.setOnClickListener(new View.OnClickListener() {
+        places.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), places.class);
@@ -162,7 +130,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        alarms.setOnClickListener(new View.OnClickListener() {
+        alarms.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), alarms.class);
@@ -178,74 +148,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
 
-        if (hasNetworkConnection()) {
-
-            Response.Listener<String> responseListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        LocationList = new ArrayList<>();
-                        boolean sucess = jsonResponse.getBoolean("sucess");
-                        if (sucess) {
-                            for (int i = 0; i < jsonResponse.length() - 1; i++) {
-                                String j = String.valueOf(i);
-                                JSONObject object = (JSONObject) jsonResponse.get(j);
-                                address = (String) object.get("name");
-                                latitude = (String) object.get("latitude");
-                                longitude = (String) object.get("longitude");
-                                minStay = (String) object.get("minStay");
-                                maxStay = (String) object.get("maxStay");
-                                priority = (String) object.get("priorityIndex");
-                                checkBackOn = (String) object.get("placeCheckBackTime");
-                                selectedLocation = new SelectedLocation();
-                                selectedLocation.addPlaceInformation(address, latitude, longitude,
-                                        minStay, maxStay, priority, checkBackOn);
-                                LocationList.add(selectedLocation);
-                            }
-
-                            for (SelectedLocation s : LocationList) {
-                                address = s.getName();
-                                Double Dlatitude = Double.parseDouble(s.getLatitude());
-                                Double Dlongitude = Double.parseDouble(s.getLongitude());
-                                newLocationAdded = new LatLng(Dlatitude, Dlongitude);
-                                Log.d("newloc", newLocationAdded.toString());
-                                Log.d("addressn", address);
-
-//                                minStay = s.getMinTimeToStay();
-//                                maxStay = s.getMaxTimeTOStay();
-//                                priority = s.getPriority();
-//                                checkBackOn = s.getCheckBackOn();
-                                if (mMap != null) {
-                                    mMap.addMarker(new MarkerOptions().position(newLocationAdded).title(address));
-//                                    Toast.makeText(getApplicationContext(), "Markers addeed Sucessfully", Toast.LENGTH_SHORT).show();
-
-                                }
-                            }
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No previous locations found", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-            user_id = login.getUserID();
-            getLocationRequest getLocationRequest = new getLocationRequest(user_id, responseListener);
-            RequestQueue req_queue = Volley.newRequestQueue(MapsActivity.this);
-            req_queue.add(getLocationRequest);
-
-        } else {
-            Toast.makeText(getApplicationContext(), "No internet Connection", Toast.LENGTH_SHORT).show();
-        }
 
         mMap.setOnInfoWindowClickListener(onInfoWindowClickListener);
 
         Intent intent = getIntent();
         intent.getIntegerArrayListExtra("tsplist");
         if (intent.getIntegerArrayListExtra("tsplist") != null) {
-            ArrayList<Integer> indexes = intent.getIntegerArrayListExtra("tsplist");
+            if (indexes != null) {
+                indexes.clear();
+            }
+            indexes = intent.getIntegerArrayListExtra("tsplist");
             Log.d("Arraylist", indexes.toString());
             for (int i = 0; i < indexes.size() - 1; i++) {
                 int iChoose = indexes.get(i);
@@ -258,9 +170,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng destination = new LatLng(dLat, dLng);
                 Polyline line = mMap.addPolyline(new PolylineOptions().add(origin, destination).width(10).color(Color.RED));
             }
+
+        } else if (indexes != null) {
+            if (lastLocation != null) {
+                SelectedLocation yourLocation = new SelectedLocation();
+                yourLocation.addPlaceInformation("Your location", String.valueOf(lastLocation.getLatitude()), String.valueOf(lastLocation.getLongitude()), "", "", "", "");
+                LocationList.add(yourLocation);
+            }
+            for (int i = 0; i < indexes.size() - 1; i++) {
+                int iChoose = indexes.get(i);
+                int jChoose = indexes.get(i + 1);
+                Log.d("ArrayLocation", Arrays.deepToString(LocationList.toArray()));
+                Double oLat = Double.valueOf(LocationList.get(iChoose).getLatitude());
+                Double oLng = Double.valueOf(LocationList.get(iChoose).getLongitude());
+                Double dLat = Double.valueOf(LocationList.get(jChoose).getLatitude());
+                Double dLng = Double.valueOf(LocationList.get(jChoose).getLongitude());
+                LatLng origin = new LatLng(oLat, oLng);
+                LatLng destination = new LatLng(dLat, dLng);
+                Polyline line = mMap.addPolyline(new PolylineOptions().add(origin, destination).width(10).color(Color.RED));
+            }
         }
-
-
     }
 
     public void centerMapLocation(Location location, String title) {
@@ -312,6 +241,133 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return connected;
     }
 
+    private void centerMap(LocationManager locationManager1) {
+        if (ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            lastLocation = locationManager1.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (lastLocation == null) {
+                lastLocation = locationManager1.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (lastLocation != null) {
+                    locationManager1.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 20, locationListener);
+                    centerMapLocation(lastLocation, "Your location");
+                    mMap.setMyLocationEnabled(true);
+                    Log.d("a", "c");
+                } else {
+                    AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
+                    alertDialog.setTitle("Location Disabled");
+                    alertDialog.setMessage("Allow this app to use location");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivity(i);
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                    Log.d("a", "d");
+                }
+            } else {
+                locationManager1.requestLocationUpdates(LocationManager.GPS_PROVIDER, 300, 500, locationListener);
+                centerMapLocation(lastLocation, "Your location");
+                mMap.setMyLocationEnabled(true);
+            }
+        } else {
+            Log.d("a", "b");
+            AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
+            alertDialog.setTitle("Location Disabled");
+            alertDialog.setMessage("Allow this app to use location");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(i);
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+            ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+    }
+
+    private void mapCenteringOnUserLocation() {
+        Log.d("a", "e");
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            centerMap(locationManager);
+            Log.d("a", "a");
+        }
+    }
+
+    private void requestLocations() {
+        if (hasNetworkConnection()) {
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        LocationList = new ArrayList<>();
+                        boolean sucess = jsonResponse.getBoolean("sucess");
+                        if (sucess) {
+                            for (int i = 0; i < jsonResponse.length() - 1; i++) {
+                                String j = String.valueOf(i);
+                                JSONObject object = (JSONObject) jsonResponse.get(j);
+                                address = (String) object.get("name");
+                                latitude = (String) object.get("latitude");
+                                longitude = (String) object.get("longitude");
+                                minStay = (String) object.get("minStay");
+                                maxStay = (String) object.get("maxStay");
+                                priority = (String) object.get("priorityIndex");
+                                checkBackOn = (String) object.get("placeCheckBackTime");
+                                selectedLocation = new SelectedLocation();
+                                selectedLocation.addPlaceInformation(address, latitude, longitude,
+                                        minStay, maxStay, priority, checkBackOn);
+                                LocationList.add(selectedLocation);
+                            }
+
+                            for (SelectedLocation s : LocationList) {
+                                address = s.getName();
+                                Double Dlatitude = Double.parseDouble(s.getLatitude());
+                                Double Dlongitude = Double.parseDouble(s.getLongitude());
+                                newLocationAdded = new LatLng(Dlatitude, Dlongitude);
+                                Log.d("newloc", newLocationAdded.toString());
+                                Log.d("addressn", address);
+
+//                                minStay = s.getMinTimeToStay();
+//                                maxStay = s.getMaxTimeTOStay();
+//                                priority = s.getPriority();
+//                                checkBackOn = s.getCheckBackOn();
+                                if (mMap != null) {
+                                    mMap.addMarker(new MarkerOptions().position(newLocationAdded).title(address));
+//                                    Toast.makeText(getApplicationContext(), "Markers addeed Sucessfully", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            if (lastLocation == null) {
+                                double tempLat = Double.parseDouble(LocationList.get(0).getLatitude());
+                                double tempLng = Double.parseDouble(LocationList.get(0).getLongitude());
+
+                                Location l = new Location("");
+                                l.setLatitude(tempLat);
+                                l.setLongitude(tempLng);
+
+                                centerMapLocation(l, LocationList.get(0).getName());
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No previous locations found", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            user_id = login.getUserID();
+            getLocationRequest getLocationRequest = new getLocationRequest(user_id, responseListener);
+            RequestQueue req_queue = Volley.newRequestQueue(MapsActivity.this);
+            req_queue.add(getLocationRequest);
+        } else {
+            Toast.makeText(getApplicationContext(), "No internet Connection", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }
 

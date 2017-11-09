@@ -31,7 +31,8 @@ public class places extends AppCompatActivity {
     ArrayList<SelectedLocation> tspDurationList;
     int[][] durationMatrix;
     static ArrayList<Integer> index1 = new ArrayList<>();
-
+    int time;
+    private static String result = "";
 
     String oLatitude;
     String oLongitude;
@@ -39,9 +40,6 @@ public class places extends AppCompatActivity {
     String dLongitude;
     DataFromGoogleRequest dataFromGoogleRequest;
 
-    public places() {
-        index1.clear();
-    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -54,7 +52,6 @@ public class places extends AppCompatActivity {
         Button back = (Button) findViewById(R.id.placesBack);
 
 
-
         addPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,94 +61,120 @@ public class places extends AppCompatActivity {
         });
 
         Log.d("placesList", "Here we areeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-
+        String userLatitude = "0";
+        String userLongitude = "0";
         if (placesList != null) {
             placesList.clear();
-
         }
-        placesList = mapsActivity.getLocationList();
-        Log.d("placesList", placesList.get(0).getName());
-        String userLatitude = String.valueOf(mapsActivity.getUserLocation().getLatitude());
-        String userLongitude = String.valueOf(mapsActivity.getUserLocation().getLongitude());
-        SelectedLocation s = new SelectedLocation();
-        if (!placesList.contains(s)) {
-            s.addPlaceInformation("Your Location", userLatitude, userLongitude, "0", "0", "0", "0");
-            placesList.add(s);
-        }
-        getAllDirectionDataFromGoogle();
-        int timeFactor = placesList.size();
-        int time;
-        if (timeFactor < 7) {
-            time = timeFactor * 3500;
-        } else {
-            time = timeFactor * timeFactor * 1000;
-        }
-        dataFromGoogleRequest = new DataFromGoogleRequest();
+        if (mapsActivity.getLocationList() != null) {
+            placesList = mapsActivity.getLocationList();
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(places.this).create();
-        alertDialog.setTitle("Loading...");
-        alertDialog.setMessage("Please Wait, while we generate a Best Route \npossible waiting time: " + time / 1000 + " seconds");
-        alertDialog.setCancelable(false);
-        alertDialog.show();
+            Log.d("placesList", placesList.get(0).getName());
+            if (mapsActivity.getUserLocation() != null) {
+                userLatitude = String.valueOf(mapsActivity.getUserLocation().getLatitude());
+                userLongitude = String.valueOf(mapsActivity.getUserLocation().getLongitude());
 
+                SelectedLocation s = new SelectedLocation();
+                if (!placesList.contains(s)) {
+                    s.addPlaceInformation("Your Location", userLatitude, userLongitude, "0", "0", "0", "0");
+                    placesList.add(s);
+                }
+            }
+            String tempTxt = "";
+            for (int i = 0; i < placesList.size(); i++) {
+                tempTxt += placesList.get(i).getName() + "\n\n";
+            }
+            resultView.setText("Places selected now  \n\n" + tempTxt);
 
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+            getAllDirectionDataFromGoogle();
+            int timeFactor = placesList.size();
 
-            @Override
-            public void run() {
-                try {
-                    durationList = dataFromGoogleRequest.getDurationList();
-                    Log.d("size", String.valueOf(durationList.size()));
-                    int size = (int) Math.sqrt(durationList.size());
+            if (timeFactor < 7) {
+                time = timeFactor * 3500;
+            } else {
+                time = timeFactor * timeFactor * 1000;
+            }
+            dataFromGoogleRequest = new DataFromGoogleRequest();
 
-                    durationMatrix = new int[size][size];
-                    for (int i = 0; i < durationList.size(); i++) {
-                        durationMatrix[i / size][i % size] = Integer.parseInt(durationList.get(i));
-                    }
-
+            if((!result.equals("")) && result !=null){
+                resultView.setText("Places sorted by nearest distance \n\n" + result);
+            }
+            Button generateRoute = (Button) findViewById(R.id.genRoute);
+            generateRoute.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final AlertDialog alertDialog = new AlertDialog.Builder(places.this).create();
+                    alertDialog.setTitle("Loading...");
+                    alertDialog.setMessage("Please Wait, while we generate a Best Route \npossible waiting time: " + time / 1000 + " seconds");
+                    alertDialog.setCancelable(false);
+                    alertDialog.show();
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
 
                         @Override
                         public void run() {
-                            Log.d("durationMatrix", Arrays.deepToString(durationMatrix));
+                            try {
+                                if (durationList != null) {
+                                    durationList.clear();
 
-                            places instance = new places();
-                            String result = "";
-                            index1 = instance.tsp(durationMatrix);
-                            for (int i = 0; i < index1.size(); i++) {
-                                int j = index1.get(i);
-                                result += placesList.get(j).getName() + " \n\n ";
+                                }
+                                if (index1 != null) {
+                                    index1.clear();
+                                }
+                                durationList = dataFromGoogleRequest.getDurationList();
+                                Log.d("size", String.valueOf(durationList.size()));
+                                int size = (int) Math.sqrt(durationList.size());
+
+                                durationMatrix = new int[size][size];
+                                for (int i = 0; i < durationList.size(); i++) {
+                                    durationMatrix[i / size][i % size] = Integer.parseInt(durationList.get(i));
+                                }
+
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        Log.d("durationMatrix", Arrays.deepToString(durationMatrix));
+
+                                        places instance = new places();
+
+                                        index1 = instance.tsp(durationMatrix);
+                                        result = "";
+                                        for (int i = 0; i < index1.size(); i++) {
+                                            int j = index1.get(i);
+
+                                            result += placesList.get(j).getName() + " \n\n ";
+                                        }
+                                        resultView.setText("Places sorted by nearest distance \n\n" + result);
+                                        Log.d("result", result);
+
+                                        alertDialog.dismiss();
+                                    }
+                                }, 1000);
+
+                            } catch (IndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(places.this);
+                                builder.setMessage("Data retrieval Failed").setNegativeButton("Retry", null).create().show();
                             }
-                            resultView.setText("Places sorted by nearest distance \n\n" + result);
-                            Log.d("result", result);
-
-                            alertDialog.dismiss();
                         }
-                    }, 1000);
-
-                } catch (IndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(places.this);
-                    builder.setMessage("Data retrieval Failed").setNegativeButton("Retry", null).create().show();
+                    }, time);
                 }
-            }
-        }, time);
+            });
 
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), MapsActivity.class);
-                i.putIntegerArrayListExtra("tsplist",index1);
-                startActivity(i);
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getApplicationContext(), MapsActivity.class);
+                    i.putIntegerArrayListExtra("tsplist", index1);
+                    startActivity(i);
 
-            }
-        });
+                }
+            });
+        }
     }
-
-
 
     public void getAllDirectionDataFromGoogle() {
 

@@ -27,4 +27,5 @@
     <string name="xhours">please put time to check back on</string>
     <string name="addThisPlace">Add this Place</string>
     <string name="addThisAlarm">Add this Alarm</string>
+    <string name="generateRoute">Generate Route</string>
 </resources>
