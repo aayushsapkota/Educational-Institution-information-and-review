@@ -247,7 +247,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (lastLocation == null) {
                 lastLocation = locationManager1.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 if (lastLocation != null) {
-                    locationManager1.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 20, locationListener);
+                    locationManager1.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 400, 20, locationListener);
                     centerMapLocation(lastLocation, "Your location");
                     mMap.setMyLocationEnabled(true);
                     Log.d("a", "c");
